@@ -20,20 +20,26 @@ class MyApp extends StatelessWidget {
     controller.stream.listen(printSpecial);
     //Oh yes! Now we don't crash anymore!
 
-    controller.sink.add('test1');
-    controller.sink.add('test2');
-    //Repeatedly hot-loading the app should show, 
-    //that sometimes 'test1' is not even printed!
 
-    controller.close();
-    //Always close your streams before (i.e.) changing context to prevent memory leaks!
-    //Strictly speaking this is NOT the place to do this. Still, this is just an example.
+    //Now we add the newest state later than the creation of the StreamBuilder.
+    //So finally our values get processed by it.
+    for (int i = 0; i <= 10; i++) {
+      Timer(Duration(seconds: i), () {
+        controller.sink.add('$i');
+      });
+    }
+
+    Timer(Duration(seconds: 11), () {
+      controller.close();
+    });
 
 
     //We will probably never see anything but the 'Loading' text :(
     return MaterialApp(
       builder: (context, widget) => Scaffold(
             body: Center(
+              //We use this StreamBuilder to consume a stream.
+              //Everytime the stream emits a new state, the builder will be triggered again.
               child: StreamBuilder(
                 stream: controller.stream,
                 builder: (context, AsyncSnapshot<String> snapshot) {
