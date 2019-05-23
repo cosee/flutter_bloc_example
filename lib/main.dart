@@ -9,7 +9,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     //Don't think Java 8+ Streams. Think Rx/Reactive.
-    StreamController<String> controller = StreamController<String>();
+    StreamController<String> controller = StreamController<String>.broadcast();
+    //Using the .broadcast() constructor lets us register more than 1 listener!
 
     controller.stream.listen(print);
     //This is equivalent to
@@ -17,9 +18,7 @@ class MyApp extends StatelessWidget {
 
 
     controller.stream.listen(printSpecial);
-    //Oh oh! Now we crash :(
-    //We can't subscribe multiple times to a stream.
-    //  -> The next commit shows how to solve this.
+    //Oh yes! Now we don't crash anymore!
 
     controller.sink.add('test1');
     controller.sink.add('test2');
