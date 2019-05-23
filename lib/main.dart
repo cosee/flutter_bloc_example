@@ -15,13 +15,19 @@ class MyApp extends StatelessWidget {
     //This is equivalent to
     //  controller.stream.listen((String msg) => print(msg));
 
+
+    controller.stream.listen(printSpecial);
+    //Oh oh! Now we crash :(
+    //We can't subscribe multiple times to a stream.
+    //  -> The next commit shows how to solve this.
+
     controller.sink.add('test1');
     controller.sink.add('test2');
     //Repeatedly hot-loading the app should show, 
     //that sometimes 'test1' is not even printed!
 
     controller.close();
-    //Always close your streams before changing context to prevent memory leaks!
+    //Always close your streams before (i.e.) changing context to prevent memory leaks!
     //Strictly speaking this is NOT the place to do this. Still, this is just an example.
 
     return MaterialApp(builder: (context, widget) => Container());
