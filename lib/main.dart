@@ -29,7 +29,22 @@ class MyApp extends StatelessWidget {
     //Always close your streams before (i.e.) changing context to prevent memory leaks!
     //Strictly speaking this is NOT the place to do this. Still, this is just an example.
 
-    return MaterialApp(builder: (context, widget) => Container());
+
+    //We will probably never see anything but the 'Loading' text :(
+    return MaterialApp(
+      builder: (context, widget) => Scaffold(
+            body: Center(
+              child: StreamBuilder(
+                stream: controller.stream,
+                builder: (context, AsyncSnapshot<String> snapshot) {
+                  return snapshot.hasData
+                      ? Text(snapshot.data)
+                      : Text('Loading');
+                },
+              ),
+            ),
+          ),
+    );
   }
 
   printSpecial(String input) => print('*** $input ***');
